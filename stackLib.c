@@ -1,44 +1,41 @@
-#define STACK_MAX 100
+#define MAX_STACK_SIZE 100
 
 
 struct Stack {
-    int     data[STACK_MAX];
-    int     size;
+    int data[MAX_STACK_SIZE];
+    int size;
 };
+
 typedef struct Stack Stack;
 
 
-void Stack_Init(Stack *S)
-{
-    S->size = 0;
+void stackInit (Stack *s) {
+    s->size = 0;
 }
 
-int Stack_Top(Stack *S)
-{
-    if (S->size == 0) {
-        fprintf(stderr, "Error: stack empty\n");
+int stackTop(Stack *s) {
+    if (s->size == 0) {
+        fprintf(stderr, "Error : Stack is empty!\n");
         return -1;
     } 
-
-    return S->data[S->size-1];
+    return s->data[s->size - 1];
 }
 
-void Stack_Push(Stack *S, int d)
-{
-    if (S->size < STACK_MAX)
-        S->data[S->size++] = d;
-    else
-        fprintf(stderr, "Error: stack full\n");
+void stackPush(Stack *s, int value) {
+    if (s->size < MAX_STACK_SIZE) {
+        s->data[s->size++] = value;
+    } else {
+        fprintf(stderr, "Error : Stack is full!\n");
+    }
 }
 
-int Stack_Pop(Stack *S)
-{
-    if (S->size == 0) {
-        fprintf(stderr, "Error: stack empty\n");
+int stackPop(Stack *s) {
+    if (s->size == 0) {
+        fprintf(stderr, "Error : Stack is empty!\n");
         return 0;
     } else {
-        int ret = Stack_Top(S);
-        S->size--;
+        int ret = stackTop(s);
+        s->size--;
         return ret;
     }
 }

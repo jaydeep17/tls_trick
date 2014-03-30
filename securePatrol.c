@@ -4,6 +4,7 @@
 #include "stackLib.c"
 
 __thread struct Stack *ptr;
+int *securePointer = 0;
 
 void func(const char *msg) {
 	char buffer[10];
@@ -11,22 +12,22 @@ void func(const char *msg) {
 	/*
 	 * Stack Patrol prologue
 	 */
-	int *securePointer = &buffer;
+	securePointer = &buffer;
 	securePointer = (char*)securePointer + 10 /* size of buffer */ + 20 /* by doing this securePointer points to RET */;
-	Stack_Push(ptr,*securePointer);
+	stackPush(ptr,*securePointer);
 
 	/*
 	 * Function code
 	 */
-	printf("sp = %p\n", securePointer);
+//	printf("sp = %p\n", securePointer);
 	strcpy(buffer,msg);
-	printf("garbage\n");
+//	printf("garbage\n");
 
 
 	/*
 	 * Stack Patrol epilogue
 	 */
-	int ret = Stack_Pop(ptr);
+	int ret = stackPop(ptr);
 	int secValue = (*securePointer);
 	if(ret != secValue) {
 		printf("You are a victim of buffer overflow\n");
@@ -41,7 +42,7 @@ int main(int argc, char const *argv[]) {
 	if(ptr == 0) {
         ptr = malloc(sizeof *ptr);
     }
-	Stack_Init(ptr);
+	stackInit(ptr);
 
 
 	/*
@@ -51,6 +52,8 @@ int main(int argc, char const *argv[]) {
 		printf("an argument is required to run it\n");
 		return 0;
 	}
-	func(argv[1]);
+	int i;
+	for (i = 0; i < 1000000; ++i)
+		func(argv[1]);
 	return 0;
 }
